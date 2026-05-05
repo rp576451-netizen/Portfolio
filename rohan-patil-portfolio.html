@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rohan Patil | BTech Student</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       Design Tokens
+       ============================================================ */
+    :root {
+      --bg:           #f5f2ee;
+      --bg-card:      #ffffff;
+      --bg-accent:    #1a1a2e;
+      --ink:          #1a1a2e;
+      --ink-light:    #6b6b80;
+      --ink-faint:    #b0afc0;
+      --accent:       #e8401c;
+      --accent-2:     #f5a623;
+      --accent-3:     #2563eb;
+      --border:       #e2ddd8;
+      --border-dark:  #c8c3bc;
+      --font-display: 'DM Serif Display', Georgia, serif;
+      --font-mono:    'DM Mono', 'Courier New', monospace;
+      --font-body:    'DM Sans', sans-serif;
+      --radius:       4px;
+      --radius-lg:    12px;
+      --nav-h:        60px;
+      --ease:         0.2s cubic-bezier(0.4,0,0.2,1);
+      --shadow:       0 2px 12px rgba(26,26,46,0.08);
+      --shadow-lg:    0 8px 32px rgba(26,26,46,0.12);
+    }
+
+    /* ============================================================
+       Reset
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    h1,h2,h3 { font-family: var(--font-display); line-height: 1.15; color: var(--ink); }
+    h1 { font-size: clamp(2.6rem, 6vw, 4.2rem); }
+    h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); }
+    h3 { font-size: 1.25rem; }
+    p  { font-size: 0.95rem; color: var(--ink-light); line-height: 1.8; }
+    a  { color: var(--accent); text-decoration: none; transition: opacity var(--ease); }
+    a:hover { opacity: 0.75; }
+
+    /* ============================================================
+       Utility
+       ============================================================ */
+    .container { max-width: 1020px; margin: 0 auto; padding: 0 1.5rem; }
+
+    .pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border-dark);
+      color: var(--ink-light);
+      background: transparent;
+      transition: border-color var(--ease), color var(--ease);
+    }
+    .pill:hover { border-color: var(--accent); color: var(--accent); }
+
+    .pill-filled {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .pill-blue {
+      background: var(--accent-3);
+      border-color: var(--accent-3);
+      color: #fff;
+    }
+    .pill-gold {
+      background: var(--accent-2);
+      border-color: var(--accent-2);
+      color: #fff;
+    }
+
+    /* ============================================================
+       Navbar
+       ============================================================ */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-h);
+      background: rgba(245,242,238,0.92);
+      border-bottom: 1.5px solid var(--border);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+    }
+    .navbar .container { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--ink);
+      cursor: pointer;
+      letter-spacing: 0.01em;
+    }
+    .nav-logo em { font-style: italic; color: var(--accent); }
+
+    .nav-links { display: flex; gap: 0.1rem; list-style: none; }
+    .nav-links a {
+      display: block;
+      padding: 6px 13px;
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--ink-light);
+      border-radius: 20px;
+      transition: background var(--ease), color var(--ease);
+      cursor: pointer;
+      letter-spacing: 0.02em;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--ink);
+      background: rgba(26,26,46,0.07);
+    }
+    .nav-links a.active { color: var(--accent); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--ink-light); border-radius: 2px; transition: background var(--ease); }
+    .hamburger:hover span { background: var(--ink); }
+
+    .nav-links.open {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: var(--nav-h);
+      left: 0; right: 0;
+      background: rgba(245,242,238,0.97);
+      border-bottom: 1.5px solid var(--border);
+      padding: 0.8rem 1.5rem 1.2rem;
+      gap: 0;
+      backdrop-filter: blur(14px);
+    }
+    .nav-links.open a { padding: 10px 0; border-bottom: 1px solid var(--border); border-radius: 0; }
+
+    /* ============================================================
+       SPA Pages
+       ============================================================ */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ============================================================
+       Section styles shared
+       ============================================================ */
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+    .section-divider { border: none; border-top: 1.5px solid var(--border); margin: 0 0 2.5rem; }
+
+    /* ============================================================
+       HOME
+       ============================================================ */
+    .hero {
+      min-height: calc(100vh - var(--nav-h));
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 5rem 0 0;
+    }
+    .hero-body { position: relative; }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 1.6rem;
+    }
+    .hero-label::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1.5px;
+      background: var(--accent);
+    }
+
+    .hero h1 { margin-bottom: 0.3rem; }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+
+    .hero-role {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--ink-light);
+      margin-bottom: 1.8rem;
+      letter-spacing: 0.03em;
+    }
+
+    .hero-bio {
+      max-width: 540px;
+      font-size: 1rem;
+      color: var(--ink-light);
+      line-height: 1.85;
+      margin-bottom: 2.2rem;
+    }
+
+    .hero-skills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2.5rem; }
+
+    .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 4rem; }
+
+    .btn-primary {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      padding: 11px 26px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      transition: all var(--ease);
+      background: var(--ink);
+      color: #fff;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--accent); color: #fff; opacity: 1; transform: translateY(-1px); box-shadow: var(--shadow); }
+
+    .btn-secondary {
+      font-family: var(--font-body);
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      padding: 10px 26px;
+      border-radius: 30px;
+      border: 1.5px solid var(--border-dark);
+      cursor: pointer;
+      transition: all var(--ease);
+      background: transparent;
+      color: var(--ink);
+      display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--ink); opacity: 1; transform: translateY(-1px); }
+
+    /* Stat strip */
+    .stat-strip {
+      border-top: 1.5px solid var(--border);
+      padding: 2.2rem 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    .stat-item { text-align: center; }
+    .stat-val { font-family: var(--font-display); font-size: 1.6rem; color: var(--ink); display: block; }
+    .stat-key { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-top: 0.1rem; }
+
+    /* Large decorative number */
+    .hero-deco {
+      position: absolute;
+      top: -1.5rem;
+      right: -1rem;
+      font-family: var(--font-display);
+      font-size: clamp(6rem, 14vw, 12rem);
+      color: rgba(26,26,46,0.04);
+      font-style: italic;
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+    }
+
+    /* ============================================================
+       ABOUT
+       ============================================================ */
+    .about-wrap { padding: 4.5rem 0 5rem; }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .info-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+      transition: box-shadow var(--ease), border-color var(--ease);
+    }
+    .info-card:hover { box-shadow: var(--shadow); border-color: var(--border-dark); }
+
+    .info-card-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+    .info-card h3 { font-family: var(--font-display); font-size: 1.1rem; color: var(--ink); margin-bottom: 0.7rem; }
+    .info-card p { font-size: 0.9rem; line-height: 1.8; }
+
+    .chip-list { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.9rem; }
+    .chip {
+      font-size: 0.75rem;
+      font-family: var(--font-body);
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(26,26,46,0.05);
+      color: var(--ink-light);
+      border: 1px solid var(--border);
+    }
+
+    /* Timeline */
+    .timeline-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2rem;
+    }
+    .tl-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.4rem; display: block; }
+
+    .tl-row { display: flex; gap: 1.2rem; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
+    .tl-row:last-child { border-bottom: none; }
+    .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+    .tl-body p { font-size: 0.87rem; color: var(--ink-light); line-height: 1.7; }
+    .tl-body strong { color: var(--ink); font-family: var(--font-body); font-size: 0.9rem; }
+    .tl-year { font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-faint); display: block; margin-bottom: 0.25rem; }
+
+    /* ============================================================
+       SKILLS
+       ============================================================ */
+    .skills-wrap { padding: 4.5rem 0 5rem; }
+    .skills-cat { margin-bottom: 3rem; }
+    .cat-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 1.1rem; display: block; }
+
+    .skills-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1rem; }
+
+    .skill-box {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      cursor: default;
+      transition: box-shadow var(--ease), border-color var(--ease), transform var(--ease);
+    }
+    .skill-box:hover { box-shadow: var(--shadow); border-color: var(--border-dark); transform: translateY(-2px); }
+    .skill-box-icon { font-size: 1.5rem; }
+    .skill-box-name { font-family: var(--font-body); font-weight: 700; font-size: 0.95rem; color: var(--ink); }
+    .skill-box-lvl { font-family: var(--font-mono); font-size: 0.68rem; color: var(--ink-faint); }
+    .skill-bar-track { height: 3px; background: var(--border); border-radius: 3px; margin-top: 0.3rem; overflow: hidden; }
+    .skill-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.6s ease; }
+
+    /* ============================================================
+       PROJECTS
+       ============================================================ */
+    .projects-wrap { padding: 4.5rem 0 5rem; }
+    .projects-list { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+
+    .proj-card {
+      background: var(--bg-card);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2.2rem;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow var(--ease), border-color var(--ease);
+    }
+    .proj-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--ease);
+    }
+    .proj-card:hover { box-shadow: var(--shadow-lg); border-color: var(--border-dark); }
+    .proj-card:hover::after { transform: scaleX(1); }
+
+    .proj-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
+    .proj-title { font-family: var(--font-display); font-size: 1.2rem; color: var(--ink); }
+    .proj-domain { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); border: 1.5px solid rgba(232,64,28,0.25); background: rgba(232,64,28,0.06); border-radius: 20px; padding: 3px 11px; white-space: nowrap; }
+
+    .proj-desc { font-size: 0.9rem; color: var(--ink-light); line-height: 1.8; margin-bottom: 1.2rem; }
+
+    .proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding-top: 1.2rem; border-top: 1px solid var(--border); }
+    .proj-block-label { font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); margin-bottom: 0.35rem; }
+    .proj-block-val { font-size: 0.85rem; color: var(--ink-light); line-height: 1.65; }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+
+    /* ============================================================
+       CONTACT
+       ============================================================ */
+    .contact-wrap { padding: 4.5rem 0 5rem; }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+
+    .contact-list { display: flex; flex-direction: column; }
+    .contact-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .contact-row:last-child { border-bottom: none; }
+    .c-icon { font-size: 1.2rem; width: 2.2rem; text-align: center; flex-shrink: 0; margin-top: 2px; }
+    .c-label { font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-faint); margin-bottom: 0.25rem; }
+    .c-val { font-size: 0.9rem; color: var(--ink); }
+    .c-val a { color: var(--accent-3); }
+    .c-val a:hover { color: var(--accent); opacity: 1; }
+
+    .contact-box {
+      background: var(--bg-accent);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      color: #fff;
+    }
+    .contact-box h3 { font-family: var(--font-display); color: #fff; font-size: 1.3rem; margin-bottom: 0.8rem; }
+    .contact-box p { color: rgba(255,255,255,0.6); font-size: 0.87rem; line-height: 1.75; margin-bottom: 1.4rem; }
+
+    .status-row { display: flex; flex-direction: column; gap: 0.6rem; }
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.7);
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #39ff7e; flex-shrink: 0; box-shadow: 0 0 6px #39ff7e; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      border-top: 1.5px solid var(--border);
+      text-align: center;
+      padding: 1.8rem 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-faint);
+      letter-spacing: 0.06em;
+    }
+    footer span { color: var(--accent); }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 700px) {
+      .hamburger { display: flex; }
+      .nav-links { display: none; }
+      .about-grid { grid-template-columns: 1fr; }
+      .skills-row { grid-template-columns: 1fr 1fr; }
+      .proj-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .stat-strip { grid-template-columns: 1fr 1fr; }
+      .hero-deco { display: none; }
+    }
+    @media (max-width: 420px) {
+      .skills-row { grid-template-columns: 1fr; }
+      .stat-strip { grid-template-columns: 1fr 1fr; }
+      .hero-cta { flex-direction: column; }
+    }
+
+    /* ============================================================
+       Page entry animation
+       ============================================================ */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+    .page.active .container > * { animation: fadeUp 0.38s ease both; }
+    .page.active .container > *:nth-child(2) { animation-delay: 0.05s; }
+    .page.active .container > *:nth-child(3) { animation-delay: 0.1s; }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== NAVBAR ===================== -->
+  <nav class="navbar">
+    <div class="container">
+      <span class="nav-logo" onclick="showPage('home')">Rohan <em>Patil</em></span>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a onclick="showPage('home')"     class="active" id="nav-home">Home</a></li>
+        <li><a onclick="showPage('about')"              id="nav-about">About</a></li>
+        <li><a onclick="showPage('skills')"             id="nav-skills">Skills</a></li>
+        <li><a onclick="showPage('projects')"           id="nav-projects">Projects</a></li>
+        <li><a onclick="showPage('contact')"            id="nav-contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===================== HOME ===================== -->
+  <div id="page-home" class="page active">
+    <main>
+      <div class="container">
+        <section class="hero">
+          <div class="hero-body">
+            <div class="hero-deco">R.</div>
+            <div class="hero-label">BTech Student · MITAOE, Pune</div>
+            <h1>Rohan<br><em>Shashikant Patil</em></h1>
+            <p class="hero-role">Information Technology &nbsp;/&nbsp; 2025–26</p>
+            <p class="hero-bio">
+              A curious first-year engineering student who loves understanding how things work — from mechanisms and systems to lines of code. Passionate about software development and driven to build meaningful projects from the ground up.
+            </p>
+            <div class="hero-skills">
+              <span class="pill pill-filled">Python</span>
+              <span class="pill pill-blue">C</span>
+              <span class="pill pill-gold">SQL</span>
+              <span class="pill">NumPy</span>
+              <span class="pill">Pandas</span>
+              <span class="pill">Databases</span>
+            </div>
+            <div class="hero-cta">
+              <a onclick="showPage('projects')" class="btn-primary">View Projects</a>
+              <a onclick="showPage('contact')" class="btn-secondary">Get in Touch</a>
+            </div>
+          </div>
+          <div class="stat-strip">
+            <div class="stat-item">
+              <span class="stat-val">MITAOE</span>
+              <span class="stat-key">College</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-val">1st</span>
+              <span class="stat-key">Year</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-val">BTech</span>
+              <span class="stat-key">Degree</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-val">3+</span>
+              <span class="stat-key">Projects</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer><p>&copy; <span>2025</span> Rohan Shashikant Patil &mdash; Built with HTML, CSS &amp; JavaScript</p></footer>
+  </div>
+
+  <!-- ===================== ABOUT ===================== -->
+  <div id="page-about" class="page">
+    <main>
+      <div class="container">
+        <section class="about-wrap">
+          <span class="section-eyebrow">// about me</span>
+          <h2>Who I Am</h2>
+          <hr class="section-divider" style="margin-top:1rem;">
+
+          <div class="about-grid">
+            <div class="info-card">
+              <span class="info-card-label">// My Story</span>
+              <p>I'm Rohan Shashikant Patil, a first-year BTech student at MIT Academy of Engineering, Pune. I've always been fascinated by how things work — whether it's a mechanical system, a circuit, or a computer program. That curiosity is what drove me into engineering.</p>
+              <br>
+              <p>I'm at the beginning of my journey, but I'm deeply committed to learning by doing — building small projects, breaking things, and figuring out why.</p>
+            </div>
+
+            <div class="info-card">
+              <span class="info-card-label">// What I'm Learning</span>
+              <p>My coursework at MITAOE covers core programming in C and Python, data management with SQL, and fundamental engineering concepts. I've also started exploring data science libraries like NumPy and Pandas.</p>
+              <br>
+              <p>Outside class, I work on hands-on projects to apply what I learn — from database design to hardware experiments like building a face sensor.</p>
+            </div>
+
+            <div class="info-card">
+              <span class="info-card-label">// My Interests</span>
+              <p>I love understanding mechanisms — how software interacts with hardware, how data flows through systems, and how ideas become working products. I'm especially drawn to software development and emerging technologies.</p>
+              <div class="chip-list">
+                <span class="chip">Software Dev</span>
+                <span class="chip">Data Analysis</span>
+                <span class="chip">Databases</span>
+                <span class="chip">Hardware + Code</span>
+                <span class="chip">New Technologies</span>
+                <span class="chip">Problem Solving</span>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <span class="info-card-label">// My Goals</span>
+              <p>I want to grow into a developer who deeply understands software systems — not just how to use them, but how to build and improve them. I aim to lead projects, contribute meaningfully to the software industry, and tackle real-world problems with elegant solutions.</p>
+              <br>
+              <p>Long term, I aspire to take on leadership roles in tech and work on products that make a genuine difference.</p>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div class="timeline-card">
+            <span class="tl-label">// Journey So Far</span>
+            <div class="tl-row">
+              <div class="tl-dot"></div>
+              <div class="tl-body">
+                <span class="tl-year">2025 — Pune, Maharashtra</span>
+                <p><strong>Enrolled in BTech — MITAOE</strong><br>Started engineering, diving into C programming, mathematics, and engineering fundamentals.</p>
+              </div>
+            </div>
+            <div class="tl-row">
+              <div class="tl-dot"></div>
+              <div class="tl-body">
+                <span class="tl-year">2025</span>
+                <p><strong>Built a Face Sensor Project</strong><br>Hands-on hardware + software project exploring computer vision basics and sensor integration.</p>
+              </div>
+            </div>
+            <div class="tl-row">
+              <div class="tl-dot"></div>
+              <div class="tl-body">
+                <span class="tl-year">2025–2026 — Ongoing</span>
+                <p><strong>Exploring Python, SQL &amp; Data Tools</strong><br>Working with NumPy, Pandas, and SQLite to build data-oriented projects and deepen programming skills.</p>
+              </div>
+            </div>
+            <div class="tl-row">
+              <div class="tl-dot"></div>
+              <div class="tl-body">
+                <span class="tl-year">2026 — Planned</span>
+                <p><strong>Building Real Software Projects</strong><br>Planning to develop full software applications, grow a GitHub profile, and contribute to open source.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer><p>&copy; <span>2025</span> Rohan Shashikant Patil &mdash; Built with HTML, CSS &amp; JavaScript</p></footer>
+  </div>
+
+  <!-- ===================== SKILLS ===================== -->
+  <div id="page-skills" class="page">
+    <main>
+      <div class="container">
+        <section class="skills-wrap">
+          <span class="section-eyebrow">// skills</span>
+          <h2>What I Know</h2>
+          <hr class="section-divider" style="margin-top:1rem;">
+
+          <!-- Programming -->
+          <div class="skills-cat">
+            <span class="cat-label">Programming Languages</span>
+            <div class="skills-row">
+              <div class="skill-box">
+                <div class="skill-box-icon">🐍</div>
+                <div class="skill-box-name">Python</div>
+                <div class="skill-box-lvl">Intermediate</div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:60%"></div></div>
+              </div>
+              <div class="skill-box">
+                <div class="skill-box-icon">⚙️</div>
+                <div class="skill-box-name">C Language</div>
+                <div class="skill-box-lvl">Foundational</div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:45%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data & Databases -->
+          <div class="skills-cat">
+            <span class="cat-label">Data &amp; Databases</span>
+            <div class="skills-row">
+              <div class="skill-box">
+                <div class="skill-box-icon">🗄️</div>
+                <div class="skill-box-name">SQL</div>
+                <div class="skill-box-lvl">Learning</div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:50%"></div></div>
+              </div>
+              <div class="skill-box">
+                <div class="skill-box-icon">📊</div>
+                <div class="skill-box-name">NumPy</div>
+                <div class="skill-box-lvl">Beginner</div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:35%"></div></div>
+              </div>
+              <div class="skill-box">
+                <div class="skill-box-icon">🐼</div>
+                <div class="skill-box-name">Pandas</div>
+                <div class="skill-box-lvl">Beginner</div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:35%"></div></div>
+              </div>
+              <div class="skill-box">
+                <div class="skill-box-icon">🗃️</div>
+                <div class="skill-box-name">Database Design</div>
+                <div class="skill-box-lvl">Learning</div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:40%"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tools & Other -->
+          <div class="skills-cat">
+            <span class="cat-label">Tools &amp; Other</span>
+            <div class="skills-row">
+              <div class="skill-box">
+                <div class="skill-box-icon">🔧</div>
+                <div class="skill-box-name">Git &amp; GitHub</div>
+                <div class="skill-box-lvl">Beginner</div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:30%"></div></div>
+              </div>
+              <div class="skill-box">
+                <div class="skill-box-icon">👁️</div>
+                <div class="skill-box-name">Face Sensor / CV</div>
+                <div class="skill-box-lvl">Explored</div>
+                <div class="skill-bar-track"><div class="skill-bar-fill" style="width:25%"></div></div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </main>
+    <footer><p>&copy; <span>2025</span> Rohan Shashikant Patil &mdash; Built with HTML, CSS &amp; JavaScript</p></footer>
+  </div>
+
+  <!-- ===================== PROJECTS ===================== -->
+  <div id="page-projects" class="page">
+    <main>
+      <div class="container">
+        <section class="projects-wrap">
+          <span class="section-eyebrow">// projects</span>
+          <h2>What I've Built</h2>
+          <hr class="section-divider" style="margin-top:1rem;">
+
+          <div class="projects-list">
+
+            <!-- Project 1 -->
+            <div class="proj-card">
+              <div class="proj-top">
+                <div class="proj-title">Face Sensor Project</div>
+                <div class="proj-domain">Hardware + Python</div>
+              </div>
+              <p class="proj-desc">
+                Built a face detection system using Python and a camera sensor. The project uses image processing to detect and identify faces in real time. It was my first step into combining hardware and software — understanding how data from a physical sensor becomes useful information.
+              </p>
+              <div class="proj-grid">
+                <div>
+                  <div class="proj-block-label">What I built</div>
+                  <div class="proj-block-val">A real-time face detection setup using a sensor/camera, Python image libraries, and basic detection logic.</div>
+                </div>
+                <div>
+                  <div class="proj-block-label">What I learned</div>
+                  <div class="proj-block-val">How sensors interface with code, image data handling, and the basics of computer vision pipelines.</div>
+                </div>
+              </div>
+              <div class="proj-tags">
+                <span class="pill">Python</span>
+                <span class="pill">OpenCV</span>
+                <span class="pill">Hardware</span>
+                <span class="pill">Computer Vision</span>
+              </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="proj-card">
+              <div class="proj-top">
+                <div class="proj-title">Data Analysis with NumPy &amp; Pandas</div>
+                <div class="proj-domain">Data Science</div>
+              </div>
+              <p class="proj-desc">
+                A Python-based data analysis project exploring real-world datasets using NumPy for numerical computation and Pandas for data manipulation. Performed data cleaning, exploration, and basic statistical analysis to draw insights from structured data.
+              </p>
+              <div class="proj-grid">
+                <div>
+                  <div class="proj-block-label">What I built</div>
+                  <div class="proj-block-val">Data pipelines for loading, cleaning, and analyzing tabular datasets. Generated summary statistics and findings.</div>
+                </div>
+                <div>
+                  <div class="proj-block-label">What I learned</div>
+                  <div class="proj-block-val">Array operations with NumPy, DataFrame manipulation in Pandas, and how to extract meaning from raw data.</div>
+                </div>
+              </div>
+              <div class="proj-tags">
+                <span class="pill">Python</span>
+                <span class="pill">NumPy</span>
+                <span class="pill">Pandas</span>
+                <span class="pill">Data Analysis</span>
+              </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="proj-card">
+              <div class="proj-top">
+                <div class="proj-title">Database Design &amp; Processing</div>
+                <div class="proj-domain">SQL / Databases</div>
+              </div>
+              <p class="proj-desc">
+                Designed and built relational databases from scratch using SQL. Created schemas, wrote queries for data retrieval and manipulation, and practised database normalization. Applied CRUD operations and explored how databases power real applications.
+              </p>
+              <div class="proj-grid">
+                <div>
+                  <div class="proj-block-label">What I built</div>
+                  <div class="proj-block-val">Normalized database schemas with tables, relationships, and SQL queries covering SELECT, JOIN, INSERT, UPDATE, DELETE.</div>
+                </div>
+                <div>
+                  <div class="proj-block-label">What I learned</div>
+                  <div class="proj-block-val">Database design principles, SQL syntax, relational data modeling, and how to query efficiently.</div>
+                </div>
+              </div>
+              <div class="proj-tags">
+                <span class="pill">SQL</span>
+                <span class="pill">Database Design</span>
+                <span class="pill">CRUD</span>
+                <span class="pill">Normalization</span>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer><p>&copy; <span>2025</span> Rohan Shashikant Patil &mdash; Built with HTML, CSS &amp; JavaScript</p></footer>
+  </div>
+
+  <!-- ===================== CONTACT ===================== -->
+  <div id="page-contact" class="page">
+    <main>
+      <div class="container">
+        <section class="contact-wrap">
+          <span class="section-eyebrow">// contact</span>
+          <h2>Let's Connect</h2>
+          <hr class="section-divider" style="margin-top:1rem;">
+
+          <div class="contact-grid">
+            <!-- Left -->
+            <div class="contact-list">
+              <div class="contact-row">
+                <div class="c-icon">🎓</div>
+                <div>
+                  <div class="c-label">College</div>
+                  <div class="c-val">MIT Academy of Engineering (MITAOE)<br>Alandi (D), Pune – 412105</div>
+                </div>
+              </div>
+              <div class="contact-row">
+                <div class="c-icon">📚</div>
+                <div>
+                  <div class="c-label">Course</div>
+                  <div class="c-val">BTech — 1st Year, 2025–26</div>
+                </div>
+              </div>
+              <div class="contact-row">
+                <div class="c-icon">🆔</div>
+                <div>
+                  <div class="c-label">PRN</div>
+                  <div class="c-val">202501080223</div>
+                </div>
+              </div>
+              <div class="contact-row">
+                <div class="c-icon">💻</div>
+                <div>
+                  <div class="c-label">GitHub</div>
+                  <div class="c-val"><a href="https://github.com/rp576451-netizen" target="_blank">github.com/rp576451-netizen</a></div>
+                </div>
+              </div>
+              <div class="contact-row">
+                <div class="c-icon">📧</div>
+                <div>
+                  <div class="c-label">Email</div>
+                  <div class="c-val"><a href="mailto:rp576451@gmail.com">rp576451@gmail.com</a></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: dark card -->
+            <div class="contact-box">
+              <h3>Open to Opportunities</h3>
+              <p>I'm always happy to connect with fellow learners, developers, or anyone who shares a passion for technology. Whether it's a collaboration, a project idea, or just a conversation — reach out!</p>
+              <div class="status-row">
+                <div class="status-item"><div class="status-dot"></div> Open to collaboration</div>
+                <div class="status-item"><div class="status-dot"></div> Actively learning &amp; building</div>
+                <div class="status-item"><div class="status-dot"></div> Seeking internships (2026+)</div>
+                <div class="status-item"><div class="status-dot"></div> Available on GitHub &amp; Email</div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </div>
+    </main>
+    <footer><p>&copy; <span>2025</span> Rohan Shashikant Patil &mdash; Built with HTML, CSS &amp; JavaScript</p></footer>
+  </div>
+
+  <!-- ===================== JS ===================== -->
+  <script>
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + id).classList.add('active');
+      document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+      document.getElementById('nav-' + id).classList.add('active');
+      document.getElementById('nav-links').classList.remove('open');
+      window.scrollTo(0, 0);
+    }
+
+    document.getElementById('hamburger').addEventListener('click', function () {
+      document.getElementById('nav-links').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>
